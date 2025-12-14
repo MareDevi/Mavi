@@ -1,0 +1,93 @@
+---
+import siteConfig from '@/config';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import FriendCard from '@/components/FriendCard.astro';
+import { friendLinks } from '@/data/friends';
+
+const seoData = {
+  title: `友链 | ${siteConfig.title}`,
+  description: '收录常读、常聊的站点，也欢迎互换链接，一起分享灵感与灵感来源。',
+  canonical: new URL('/friends', siteConfig.site).href,
+  ogType: 'website' as const,
+};
+
+const featuredFriends = friendLinks.filter((friend) => friend.featured);
+const regularFriends = featuredFriends.length > 0
+  ? friendLinks.filter((friend) => !friend.featured)
+  : friendLinks;
+---
+
+<BaseLayout seoData={seoData}>
+  <main class="py-10 sm:py-16">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8" style={`max-width: ${siteConfig.layout.contentWidth};`}>
+      <section class="mb-10 sm:mb-14">
+        <p class="text-sm font-semibold text-highlight-700 dark:text-highlight-400 uppercase tracking-[0.08em] mb-3">Friends</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-primary-900 dark:text-primary-50 mb-4">友链</h1>
+        <p class="text-primary-600 dark:text-primary-300 max-w-3xl leading-relaxed">
+          我的好朋友与小伙伴们。
+        </p>
+
+        <div class="mt-6 grid gap-4 sm:gap-6 md:grid-cols-3">
+          <div class="rounded-xl border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/80 p-4 sm:p-5 shadow-sm">
+            <h2 class="text-base font-semibold text-primary-900 dark:text-primary-50 mb-2">收录标准</h2>
+            <ul class="space-y-2 text-sm text-primary-600 dark:text-primary-300 leading-relaxed">
+              <li>• 长期可访问，更新频率不必很高但请保持在线。</li>
+              <li>• 主题与内容友善，尊重原创，远离侵权与过度广告。</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/80 p-4 sm:p-5 shadow-sm">
+            <h2 class="text-base font-semibold text-primary-900 dark:text-primary-50 mb-2">准备信息</h2>
+            <ul class="space-y-2 text-sm text-primary-600 dark:text-primary-300 leading-relaxed">
+              <li>• 站点名称与 URL。</li>
+              <li>• 一句话描述。</li>
+              <li>• 可选头像与关键词标签。</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/80 p-4 sm:p-5 shadow-sm">
+            <h2 class="text-base font-semibold text-primary-900 dark:text-primary-50 mb-2">如何加入</h2>
+            <ul class="space-y-2 text-sm text-primary-600 dark:text-primary-300 leading-relaxed">
+              <li>• 留言或私信我，附上准备好的信息。</li>
+              <li>• 我会尽快添加到站点，也欢迎你在自己的页面加上本站链接。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {featuredFriends.length > 0 && (
+        <section class="mb-12">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">精选伙伴</h2>
+            <span class="text-sm text-primary-600 dark:text-primary-300">优先关注的朋友</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            {featuredFriends.map((friend) => (
+              <FriendCard friend={friend} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
+            {featuredFriends.length > 0 ? '全部友链' : '友链列表'}
+          </h2>
+          <span class="text-sm text-primary-600 dark:text-primary-300">
+            共 {friendLinks.length} 位朋友
+          </span>
+        </div>
+        {regularFriends.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            {regularFriends.map((friend) => (
+              <FriendCard friend={friend} />
+            ))}
+          </div>
+        ) : (
+          <div class="rounded-xl border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/80 p-6 text-primary-700 dark:text-primary-200">
+            目前还没有更多友链，欢迎成为第一位入驻的伙伴。
+          </div>
+        )}
+      </section>
+    </div>
+  </main>
+</BaseLayout>

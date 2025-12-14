@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import type { FriendLink } from '@/data/friends';
+
+interface Props {
+  friend: FriendLink;
+}
+
+const { friend }: Props = Astro.props;
+const initial = friend.name?.charAt(0)?.toUpperCase() || '?';
+---
+
+<a
+  href={friend.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="group block h-full"
+  data-no-swup
+>
+  <div class="h-full rounded-xl border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/80 p-4 sm:p-5 flex gap-4 items-center transition-all duration-200 hover:-translate-y-1 hover:border-highlight-500 dark:hover:border-highlight-400 hover:shadow-lg">
+    <div class="relative flex-shrink-0">
+      <div class="w-14 h-14 rounded-full overflow-hidden bg-primary-100 dark:bg-primary-800 border border-primary-200 dark:border-primary-700 flex items-center justify-center text-lg font-semibold text-primary-700 dark:text-primary-200 shadow-sm">
+        {friend.avatar ? (
+          <img
+            src={friend.avatar}
+            alt={`${friend.name} avatar`}
+            loading="lazy"
+            class="w-full h-full object-cover"
+          />
+        ) : (
+          <span aria-hidden="true">{initial}</span>
+        )}
+      </div>
+      {friend.featured && (
+        <span class="absolute -top-1.5 -right-1.5 px-2 py-0.5 text-[11px] font-semibold rounded-full bg-highlight-100 dark:bg-highlight-900 text-highlight-700 dark:text-highlight-300 border border-highlight-300 dark:border-highlight-700">
+          推荐
+        </span>
+      )}
+    </div>
+
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1">
+        <h3 class="text-base font-semibold text-primary-900 dark:text-primary-50 truncate">
+          {friend.name}
+        </h3>
+      </div>
+      <p class="text-sm text-primary-600 dark:text-primary-300 leading-relaxed">
+        {friend.description}
+      </p>
+
+      {friend.tags && friend.tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-3">
+          {friend.tags.map((tag) => (
+            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 border border-primary-200 dark:border-primary-700">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div class="hidden sm:flex items-center text-highlight-600 dark:text-highlight-400 group-hover:translate-x-1 transition-transform">
+      <Icon name="arrow-up-right" class="w-5 h-5" />
+    </div>
+  </div>
+</a>
