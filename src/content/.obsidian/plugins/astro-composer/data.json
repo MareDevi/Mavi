@@ -1,0 +1,76 @@
+{
+  "defaultTemplate": "---\ntitle: \"{{title}}\"\ndate: {{date}}\ndescription: \"\"\ntags: []\nimage: \"\"\nimageAlt: \"\"\nimageOG: false\nhideCoverImage: false\nhideTOC: false\ntargetKeyword: \"\"\ndraft: true\n---",
+  "autoInsertProperties": true,
+  "dateFormat": "YYYY-MM-DD",
+  "enableCopyHeadingLink": true,
+  "copyHeadingLinkFormat": "obsidian",
+  "addTrailingSlashToLinks": true,
+  "enableOpenTerminalCommand": true,
+  "terminalProjectRootPath": "../..",
+  "enableTerminalRibbonIcon": true,
+  "enableOpenConfigFileCommand": true,
+  "configFilePath": "../config.ts",
+  "enableConfigRibbonIcon": false,
+  "contentTypes": [
+    {
+      "id": "posts-1765432337485",
+      "name": "Posts",
+      "folder": "posts",
+      "linkBasePath": "/posts/",
+      "template": "---\ntitle: \"{{title}}\"\ndate: {{date}}\ndescription: \"\"\ntags: []\nimage: \"\"\nimageAlt: \"\"\nimageOG: false\nhideCoverImage: false\nhideTOC: false\ntargetKeyword: \"\"\ndraft: true\n---",
+      "enabled": true,
+      "creationMode": "file",
+      "indexFileName": "index",
+      "ignoreSubfolders": false,
+      "enableUnderscorePrefix": false,
+      "collapsed": false
+    },
+    {
+      "id": "pages-1765432337485",
+      "name": "Pages",
+      "folder": "pages",
+      "linkBasePath": "",
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nnoIndex: false\nhideTOC: false\ndraft: true\n---\n",
+      "enabled": true,
+      "creationMode": "file",
+      "indexFileName": "index",
+      "ignoreSubfolders": false,
+      "enableUnderscorePrefix": false,
+      "collapsed": false
+    },
+    {
+      "id": "content-1765432392567",
+      "name": "Projects",
+      "folder": "projects",
+      "linkBasePath": "/projects/",
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\ndate: {{date}}\ncategories: []\nrepositoryUrl: \"\"\ndemoURL: \"\"\nstatus: \"\"\nimage: \"\"\nimageAlt: \"\"\nhideCoverImage: false\nhideTOC: false\nnoIndex: false\nfeatured: false\n---",
+      "enabled": true,
+      "creationMode": "file",
+      "indexFileName": "",
+      "ignoreSubfolders": false,
+      "enableUnderscorePrefix": false
+    },
+    {
+      "id": "content-1765432406133",
+      "name": "Docs",
+      "folder": "docs",
+      "linkBasePath": "/docs/",
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\ncategory: \"\"\norder: 0\nlastModified: {{date}}\nversion: \"\"\nimage: \"\"\nimageAlt: \"\"\nhideCoverImage: false\nhideTOC: false\ndraft: false\nnoIndex: false\nfeatured: false\n---",
+      "enabled": true,
+      "creationMode": "file",
+      "indexFileName": "",
+      "ignoreSubfolders": false,
+      "enableUnderscorePrefix": false
+    }
+  ],
+  "migrationCompleted": true,
+  "helpButtonReplacement": {
+    "enabled": true,
+    "commandId": "astro-modular-settings:open-settings",
+    "iconId": "wrench"
+  },
+  "linkBasePath": "/posts/",
+  "enableAutoRename": true,
+  "enableAutoInsertFrontmatter": true,
+  "draftStyle": "filename"
+}

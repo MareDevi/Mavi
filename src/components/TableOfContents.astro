@@ -1,0 +1,273 @@
+---
+import type { Heading } from '@/types';
+import Icon from './Icon.astro';
+import { getTableOfContentsDepth } from '@/config';
+
+export interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter and structure headings using configurable depth
+const maxDepth = getTableOfContentsDepth();
+const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= maxDepth);
+// Hide TOC if there's only 1 heading (not useful)
+const shouldShowTOC = filteredHeadings.length > 1;
+---
+
+{shouldShowTOC && (
+  <nav class="toc-nav toc-container p-4 pr-5 bg-white dark:bg-primary-900 rounded-xl border border-primary-200 dark:border-primary-700 shadow-lg backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
+    <div class="toc-content">
+      <button 
+        class="toc-toggle w-full font-semibold text-primary-900 dark:text-primary-50 mb-3 flex items-center justify-between text-sm hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
+        aria-expanded="true"
+        aria-controls="toc-list"
+      >
+        <div class="flex items-center">
+          <Icon name="list" class="w-4 h-4 mr-2" />
+          Contents
+        </div>
+        <Icon name="chevron-down" class="w-4 h-4 toc-chevron transition-transform duration-200" />
+      </button>
+      
+      <ul class="space-y-2 toc-list" id="toc-list">
+        {filteredHeadings.map(heading => (
+          <li class={`toc-item toc-level-${heading.depth}`}>
+            <a 
+              href={`#${heading.slug}`}
+              class="toc-link block text-sm text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors py-1 pr-2"
+              data-heading={heading.slug}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+)}
+
+<script>
+  // Global function to initialize table of contents
+  function initializeTableOfContents() {
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const headings = document.querySelectorAll('h2, h3, h4, h5, h6');
+    const tocToggle = document.querySelector('.toc-toggle') as HTMLButtonElement;
+    const tocList = document.querySelector('.toc-list') as HTMLElement;
+    const tocChevron = document.querySelector('.toc-chevron') as HTMLElement;
+    
+    if (!tocLinks.length || !headings.length) return;
+    
+    // Remove existing event listeners to prevent duplicates
+    if (tocToggle) {
+      const newToggle = tocToggle.cloneNode(true) as HTMLButtonElement;
+      tocToggle.parentNode?.replaceChild(newToggle, tocToggle);
+    }
+    
+    // Get fresh references after cloning
+    const freshTocToggle = document.querySelector('.toc-toggle') as HTMLButtonElement;
+    const freshTocList = document.querySelector('.toc-list') as HTMLElement;
+    const freshTocChevron = document.querySelector('.toc-chevron') as HTMLElement;
+    
+    // TOC Toggle functionality
+    if (freshTocToggle && freshTocList && freshTocChevron) {
+      freshTocToggle.addEventListener('click', () => {
+        const isExpanded = freshTocToggle.getAttribute('aria-expanded') === 'true';
+        
+        if (isExpanded) {
+          // Collapse
+          freshTocList.style.display = 'none';
+          freshTocToggle.setAttribute('aria-expanded', 'false');
+          freshTocChevron.style.transform = 'rotate(90deg)';
+        } else {
+          // Expand
+          freshTocList.style.display = 'block';
+          freshTocToggle.setAttribute('aria-expanded', 'true');
+          freshTocChevron.style.transform = 'rotate(0deg)';
+        }
+      });
+    }
+    
+    // Highlight active section in TOC
+    function highlightTOC() {
+      let current = '';
+      
+      headings.forEach(heading => {
+        const rect = heading.getBoundingClientRect();
+        if (rect.top <= 100) {
+          current = heading.id;
+        }
+      });
+      
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href')?.slice(1);
+        if (href === current) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    
+    // Update active link on scroll
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          highlightTOC();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+    
+    // Initial highlight
+    highlightTOC();
+    
+    // Force scrollbar style refresh
+    const tocNav = document.querySelector('.toc-container') as HTMLElement;
+    if (tocNav) {
+      // Trigger a reflow to force style recalculation
+      tocNav.style.display = 'none';
+      tocNav.offsetHeight; // Trigger reflow
+      tocNav.style.display = '';
+    }
+  }
+
+  // Make function globally available
+  (window as any).initializeTableOfContents = initializeTableOfContents;
+
+  // Initialize on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', initializeTableOfContents);
+</script>
+
+<style>
+  .toc-level-2 {
+    @apply ml-0;
+  }
+  
+  .toc-level-3 {
+    @apply ml-4;
+  }
+  
+  .toc-level-4 {
+    @apply ml-8;
+  }
+  
+  .toc-level-5 {
+    @apply ml-12;
+  }
+  
+  .toc-level-6 {
+    @apply ml-16;
+  }
+  
+  .toc-link.active {
+    @apply text-highlight-600 dark:text-highlight-400 font-medium;
+  }
+  
+  /* Ensure proper transform origin for chevron rotation */
+  .toc-chevron {
+    transform-origin: center;
+  }
+  
+  .toc-link.active::before {
+    content: '';
+    @apply absolute left-0 top-1/2 transform -translate-y-1/2 w-0.5 h-4 bg-highlight-600 dark:bg-highlight-400 rounded-full;
+  }
+  
+  .toc-item {
+    @apply relative;
+  }
+  
+  .toc-nav {
+    /* No height restrictions - let it flow naturally */
+  }
+  
+  .toc-content {
+    /* No scrolling needed - content flows naturally */
+    overflow-x: hidden;
+    overflow-y: visible;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .toc-link {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    line-height: 1.5;
+    display: block;
+    box-sizing: border-box;
+  }
+  
+  /* Level 2 (no indentation) - full width */
+  .toc-level-2 .toc-link {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Indented levels - account for left margin in width calculation */
+  .toc-level-3 .toc-link {
+    width: calc(100% - 1rem);
+    max-width: calc(100% - 1rem);
+  }
+  
+  .toc-level-4 .toc-link {
+    width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+  
+  .toc-level-5 .toc-link {
+    width: calc(100% - 3rem);
+    max-width: calc(100% - 3rem);
+  }
+  
+  .toc-level-6 .toc-link {
+    width: calc(100% - 4rem);
+    max-width: calc(100% - 4rem);
+  }
+  
+  /* Desktop floating TOC */
+  @media (min-width: 1280px) {
+    .toc-nav {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
+  
+  /* Mobile/Tablet TOC */
+  @media (max-width: 1279px) {
+    .toc-nav {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  
+  /* Prevent horizontal overflow */
+  .toc-list {
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    padding-right: 0;
+    box-sizing: border-box;
+  }
+  
+  .toc-item {
+    min-width: 0;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+  
+  
+  .toc-chevron {
+    @apply transition-transform duration-200;
+  }
+</style>

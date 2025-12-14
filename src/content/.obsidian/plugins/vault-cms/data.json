@@ -1,0 +1,38 @@
+{
+  "projectRoot": "",
+  "configFilePath": "",
+  "contentTypes": [],
+  "frontmatterProperties": {},
+  "preset": "vanilla",
+  "enableWYSIWYG": false,
+  "enabledPlugins": [],
+  "disabledPlugins": [],
+  "theme": "",
+  "basesCMSConfig": {
+    "views": []
+  },
+  "astroComposerConfig": {
+    "customContentTypes": [],
+    "defaultTemplate": "",
+    "configFilePath": "",
+    "terminalProjectRootPath": ""
+  },
+  "seoConfig": {
+    "titleProperty": "title",
+    "scanDirectories": "",
+    "useFilenameAsTitle": false,
+    "useFilenameAsSlug": true
+  },
+  "commanderConfig": {
+    "pageHeaderCommands": []
+  },
+  "propertyOverFileName": {
+    "propertyKey": "title"
+  },
+  "imageInserter": {
+    "valueFormat": "[[attachments/{image-url}]]",
+    "insertFormat": "[[attachments/{image-url}]]"
+  },
+  "runWizardOnStartup": false,
+  "wizardCompleted": false
+}

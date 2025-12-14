@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+
+export interface Props {
+  currentDocId: string;
+  currentCategory: string | null;
+  allDocs: CollectionEntry<'docs'>[];
+}
+
+const { currentDocId, currentCategory, allDocs } = Astro.props;
+
+// Filter docs by category
+// If current page has no category (or "General"), show all docs
+// Otherwise, show only docs matching the current category
+let filteredDocs: CollectionEntry<'docs'>[] = [];
+
+if (!currentCategory || currentCategory.trim() === '' || currentCategory === 'General') {
+  // Show all docs if no category
+  filteredDocs = allDocs;
+} else {
+  // Filter by category - handle "Unsorted" specially
+  if (currentCategory === 'Unsorted') {
+    filteredDocs = allDocs.filter(doc => 
+      !doc.data.category || 
+      doc.data.category.trim() === '' || 
+      doc.data.category === 'General'
+    );
+  } else {
+    filteredDocs = allDocs.filter(doc =>
+      doc.data.category &&
+      doc.data.category.trim() !== '' &&
+      doc.data.category !== 'General' &&
+      doc.data.category === currentCategory
+    );
+  }
+}
+
+// Sort by order, then by title
+filteredDocs.sort((a, b) => {
+  if (a.data.order !== b.data.order) {
+    return a.data.order - b.data.order;
+  }
+  return a.data.title.localeCompare(b.data.title);
+});
+
+// Determine sidebar header text
+const sidebarHeader = currentCategory && currentCategory !== 'General' ? currentCategory : 'Documentation';
+---
+
+<!-- Desktop Sidebar (visible at xl breakpoint and above, hidden on mobile - same behavior as TOC) -->
+<aside 
+  id="docs-sidebar-desktop" 
+  class="hidden xl:block absolute top-0 right-full w-64 mr-4 pointer-events-auto"
+  aria-label="Documentation navigation"
+>
+  <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+    <div class="bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm p-4">
+      <div class="flex items-center gap-2 mb-4">
+        <Icon name="book-open" class="w-5 h-5 text-primary-600 dark:text-primary-400" />
+        <h2 class="text-sm font-semibold text-primary-900 dark:text-primary-50">
+          {sidebarHeader}
+        </h2>
+      </div>
+      <nav class="space-y-1">
+        {filteredDocs.map((doc) => {
+          const isActive = doc.id === currentDocId;
+          return (
+            <a
+              href={`/docs/${doc.id}`}
+              class={`block px-3 py-2 rounded-md text-sm transition-colors ${
+                isActive
+                  ? 'bg-highlight-50 dark:bg-highlight-900/20 text-highlight-600 dark:text-highlight-400 font-semibold'
+                  : 'text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800 hover:text-highlight-600 dark:hover:text-highlight-400'
+              }`}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {doc.data.title}
+            </a>
+          );
+        })}
+      </nav>
+    </div>
+  </div>
+</aside>
