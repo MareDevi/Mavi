@@ -1,208 +1,233 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
-import { siteConfig } from '@/config';
-import { shouldShowContent, sortPostsByDate, extractTags } from '@/utils/markdown';
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import PageLayout from '@/layouts/PageLayout.astro';
-import SnippetCard from '@/components/SnippetCard.astro';
-import Icon from '@/components/Icon.astro';
+import { getCollection, getEntry, render } from "astro:content";
+import { siteConfig } from "@/config";
+import {
+    shouldShowContent,
+    sortPostsByDate,
+    extractTags,
+} from "@/utils/markdown";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageLayout from "@/layouts/PageLayout.astro";
+import SnippetCard from "@/components/SnippetCard.astro";
+import Icon from "@/components/Icon.astro";
 
 // If snippets are disabled, try to fall back to a regular page named "snippets"
 let fallbackPage = null;
 if (!siteConfig.optionalContentTypes.snippets) {
-  try {
-    fallbackPage = await getEntry('pages', 'snippets');
-    if (!fallbackPage) {
-      return Astro.redirect('/404');
+    try {
+        fallbackPage = await getEntry("pages", "snippets");
+        if (!fallbackPage) {
+            return Astro.redirect("/404");
+        }
+    } catch (error) {
+        return Astro.redirect("/404");
     }
-  } catch (error) {
-    return Astro.redirect('/404');
-  }
 }
 
 const url = new URL(Astro.request.url);
-const selectedTag = url.searchParams.get('tag');
-const selectedLanguage = url.searchParams.get('lang');
+const selectedTag = url.searchParams.get("tag");
+const selectedLanguage = url.searchParams.get("lang");
 
-const allSnippets = await getCollection('snippets');
+const allSnippets = await getCollection("snippets");
 const isDev = import.meta.env.DEV;
 
 const visibleSnippets = sortPostsByDate(
-  allSnippets.filter((snippet) => shouldShowContent(snippet, isDev))
+    allSnippets.filter((snippet) => shouldShowContent(snippet, isDev)),
 );
 
 const filteredSnippets = visibleSnippets.filter((snippet) => {
-  const matchesTag = selectedTag
-    ? snippet.data.tags?.includes(selectedTag)
-    : true;
-  const matchesLanguage = selectedLanguage
-    ? snippet.data.language?.toLowerCase() === selectedLanguage.toLowerCase()
-    : true;
-  return matchesTag && matchesLanguage;
+    const matchesTag = selectedTag
+        ? snippet.data.tags?.includes(selectedTag)
+        : true;
+    const matchesLanguage = selectedLanguage
+        ? snippet.data.language?.toLowerCase() ===
+          selectedLanguage.toLowerCase()
+        : true;
+    return matchesTag && matchesLanguage;
 });
 
 const allTags = Array.from(
-  new Set(
-    visibleSnippets.flatMap(snippet => snippet.data.tags ?? [])
-      .filter((tag): tag is string => Boolean(tag))
-      .map(tag => tag.trim())
-  )
+    new Set(
+        visibleSnippets
+            .flatMap((snippet) => snippet.data.tags ?? [])
+            .filter((tag): tag is string => Boolean(tag))
+            .map((tag) => tag.trim()),
+    ),
 );
 const allLanguages = Array.from(
-  new Set(
-    visibleSnippets
-      .map((snippet) => snippet.data.language)
-      .filter((lang): lang is string => Boolean(lang))
-      .map((lang) => lang.trim())
-  )
+    new Set(
+        visibleSnippets
+            .map((snippet) => snippet.data.language)
+            .filter((lang): lang is string => Boolean(lang))
+            .map((lang) => lang.trim()),
+    ),
 );
 
 let snippetsPageContent = null;
 let SnippetsPageContent = null;
 
 try {
-  snippetsPageContent = await getEntry('special', 'snippets');
-  if (snippetsPageContent) {
-    const { Content } = await render(snippetsPageContent);
-    SnippetsPageContent = Content;
-  }
+    snippetsPageContent = await getEntry("special", "snippets");
+    if (snippetsPageContent) {
+        const { Content } = await render(snippetsPageContent);
+        SnippetsPageContent = Content;
+    }
 } catch (error) {
-  // ignore missing special content
+    // ignore missing special content
 }
 
 const totalCount = filteredSnippets.length;
-const baseTitle = snippetsPageContent?.data.title || 'Snippets';
+const baseTitle = snippetsPageContent?.data.title || "Snippets";
 const pageTitle = selectedTag
-  ? `${baseTitle} tagged "${selectedTag}"`
-  : selectedLanguage
-    ? `${baseTitle} in ${selectedLanguage}`
-    : baseTitle;
+    ? `${baseTitle} tagged "${selectedTag}"`
+    : selectedLanguage
+      ? `${baseTitle} in ${selectedLanguage}`
+      : baseTitle;
 
 const seoData = {
-  title: `${pageTitle} | ${siteConfig.title}`,
-  description:
-    snippetsPageContent?.data.description ||
-    `Browse ${visibleSnippets.length} snippets on ${siteConfig.title}`,
-  canonical: Astro.url.href,
-  ogType: 'website' as const,
-  noIndex: (snippetsPageContent?.data as any)?.noIndex || false
+    title: `${pageTitle} | ${siteConfig.title}`,
+    description:
+        snippetsPageContent?.data.description ||
+        `Browse ${visibleSnippets.length} snippets on ${siteConfig.title}`,
+    canonical: Astro.url.href,
+    ogType: "website" as const,
+    noIndex: (snippetsPageContent?.data as any)?.noIndex || false,
 };
 ---
 
-{fallbackPage ? (
-  <PageLayout page={fallbackPage as any} />
-) : (
-<BaseLayout seoData={seoData}>
-  <div class="py-8 relative">
-    <div class="mx-auto px-4 sm:px-6 lg:px-8 mb-10" style={`max-width: ${siteConfig.layout.contentWidth}`}>
-      <header class="mb-6">
-        <div class="flex items-start justify-between flex-wrap gap-4 mb-3">
-          <h1 class="text-lg font-bold text-primary-900 dark:text-primary-50">
-            {pageTitle}
-          </h1>
-          <div class="flex items-center gap-2">
-            {selectedTag || selectedLanguage ? (
-              <a
-                href="/snippets"
-                class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
-              >
-                <Icon name="arrow-left" class="w-4 h-4 mr-1" />
-                Clear filters
-              </a>
-            ) : null}
-          </div>
-        </div>
-        {SnippetsPageContent ? (
-          <div class="prose prose-sm dark:prose-dark max-w-none">
-            <SnippetsPageContent />
-          </div>
-        ) : (
-          <p class="text-primary-600 dark:text-primary-300">
-            Lightweight code snippets and quick references.
-          </p>
-        )}
-      </header>
-
-      {(allTags.length > 0 || allLanguages.length > 0) && (
-        <div class="flex flex-wrap gap-3 mb-6">
-          {allTags.length > 0 && (
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-sm text-primary-500 dark:text-primary-400 font-medium">Tags:</span>
-              <a
-                href="/snippets"
-                class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                  !selectedTag
-                    ? 'bg-primary-900 text-primary-50 border-primary-900'
-                    : 'text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800'
-                }`}
-              >
-                All
-              </a>
-              {allTags.map((tag) => (
-                <a
-                  href={`/snippets?tag=${encodeURIComponent(tag)}`}
-                  class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                    selectedTag === tag
-                      ? 'bg-primary-900 text-primary-50 border-primary-900'
-                      : 'text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800'
-                  }`}
+{
+    fallbackPage ? (
+        <PageLayout page={fallbackPage as any} />
+    ) : (
+        <BaseLayout seoData={seoData}>
+            <div class="py-8 relative">
+                <div
+                    class="mx-auto px-4 sm:px-6 lg:px-8 mb-10"
+                    style={`max-width: ${siteConfig.layout.contentWidth}`}
                 >
-                  {tag}
-                </a>
-              ))}
-            </div>
-          )}
+                    <header class="mb-6">
+                        <div class="flex items-start justify-between flex-wrap gap-4 mb-3">
+                            <h1 class="text-lg font-bold text-primary-900 dark:text-primary-50">
+                                {pageTitle}
+                            </h1>
+                            <div class="flex items-center gap-2">
+                                {selectedTag || selectedLanguage ? (
+                                    <a
+                                        href="/snippets"
+                                        class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
+                                    >
+                                        <Icon
+                                            name="arrow-left"
+                                            class="w-4 h-4 mr-1"
+                                        />
+                                        Clear filters
+                                    </a>
+                                ) : null}
+                            </div>
+                        </div>
+                        {SnippetsPageContent ? (
+                            <div class="prose prose-sm dark:prose-dark max-w-none">
+                                <SnippetsPageContent />
+                            </div>
+                        ) : (
+                            <p class="text-primary-600 dark:text-primary-300">
+                                Lightweight code snippets and quick references.
+                            </p>
+                        )}
+                    </header>
 
-          {allLanguages.length > 0 && (
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-sm text-primary-500 dark:text-primary-400 font-medium">Language:</span>
-              <a
-                href="/snippets"
-                class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                  !selectedLanguage
-                    ? 'bg-primary-900 text-primary-50 border-primary-900'
-                    : 'text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800'
-                }`}
-              >
-                All
-              </a>
-              {allLanguages.map((lang) => (
-                <a
-                  href={`/snippets?lang=${encodeURIComponent(lang)}`}
-                  class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                    selectedLanguage?.toLowerCase() === lang.toLowerCase()
-                      ? 'bg-primary-900 text-primary-50 border-primary-900'
-                      : 'text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800'
-                  }`}
-                >
-                  {lang}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                    {(allTags.length > 0 || allLanguages.length > 0) && (
+                        <div class="flex flex-wrap gap-3 mb-6">
+                            {allTags.length > 0 && (
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-sm text-primary-500 dark:text-primary-400 font-medium">
+                                        Tags:
+                                    </span>
+                                    <a
+                                        href="/snippets"
+                                        class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                                            !selectedTag
+                                                ? "bg-primary-900 text-primary-50 border-primary-900"
+                                                : "text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800"
+                                        }`}
+                                    >
+                                        All
+                                    </a>
+                                    {allTags.map((tag) => (
+                                        <a
+                                            href={`/snippets?tag=${encodeURIComponent(tag)}`}
+                                            class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                                                selectedTag === tag
+                                                    ? "bg-primary-900 text-primary-50 border-primary-900"
+                                                    : "text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800"
+                                            }`}
+                                        >
+                                            {tag}
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
 
-      {filteredSnippets.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center md:justify-items-stretch">
-          {filteredSnippets.map((snippet, index) => (
-            <SnippetCard snippet={snippet} eager={index < 4} />
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-12">
-          <Icon name="file-code-2" class="w-12 h-12 text-primary-300 dark:text-primary-600 mx-auto mb-4" />
-          <h3 class="text-lg font-medium text-primary-900 dark:text-primary-50 mb-2">
-            No snippets found
-          </h3>
-          <p class="text-primary-600 dark:text-primary-300">
-            {selectedTag || selectedLanguage
-              ? 'Try a different tag or language.'
-              : 'Check back soon for new snippets!'}
-          </p>
-        </div>
-      )}
-    </div>
-  </div>
-</BaseLayout>
-)}
+                            {allLanguages.length > 0 && (
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-sm text-primary-500 dark:text-primary-400 font-medium">
+                                        Language:
+                                    </span>
+                                    <a
+                                        href="/snippets"
+                                        class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                                            !selectedLanguage
+                                                ? "bg-primary-900 text-primary-50 border-primary-900"
+                                                : "text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800"
+                                        }`}
+                                    >
+                                        All
+                                    </a>
+                                    {allLanguages.map((lang) => (
+                                        <a
+                                            href={`/snippets?lang=${encodeURIComponent(lang)}`}
+                                            class={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                                                selectedLanguage?.toLowerCase() ===
+                                                lang.toLowerCase()
+                                                    ? "bg-primary-900 text-primary-50 border-primary-900"
+                                                    : "text-primary-700 dark:text-primary-200 border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800"
+                                            }`}
+                                        >
+                                            {lang}
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {filteredSnippets.length > 0 ? (
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center md:justify-items-stretch">
+                            {filteredSnippets.map((snippet, index) => (
+                                <SnippetCard
+                                    snippet={snippet}
+                                    eager={index < 4}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div class="text-center py-12">
+                            <Icon
+                                name="file-code-2"
+                                class="w-12 h-12 text-primary-300 dark:text-primary-600 mx-auto mb-4"
+                            />
+                            <h3 class="text-lg font-medium text-primary-900 dark:text-primary-50 mb-2">
+                                No snippets found
+                            </h3>
+                            <p class="text-primary-600 dark:text-primary-300">
+                                {selectedTag || selectedLanguage
+                                    ? "Try a different tag or language."
+                                    : "Check back soon for new snippets!"}
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </BaseLayout>
+    )
+}

@@ -1,18 +1,25 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { siteConfig } from '@/config';
-import { render } from 'astro:content';
-import { generateSnippetSEO } from '@/utils/seo';
-import { processMarkdown, calculateReadingTime, generateTOC, formatDate, formatDateMobile, getReadingTimeMobile } from '@/utils/markdown';
-import { getOptimizedFormat } from '@/utils/images';
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import TableOfContents from '@/components/TableOfContents.astro';
-import ImageWrapper from '@/components/ImageWrapper.astro';
-import Lightbox from '@/components/Lightbox.astro';
-import GiscusComments from '@/components/GiscusComments.astro';
+import type { CollectionEntry } from "astro:content";
+import { siteConfig } from "@/config";
+import { render } from "astro:content";
+import { generateSnippetSEO } from "@/utils/seo";
+import {
+    processMarkdown,
+    calculateReadingTime,
+    generateTOC,
+    formatDate,
+    formatDateMobile,
+    getReadingTimeMobile,
+} from "@/utils/markdown";
+import { getOptimizedFormat } from "@/utils/images";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import TableOfContents from "@/components/TableOfContents.astro";
+import ImageWrapper from "@/components/ImageWrapper.astro";
+import Lightbox from "@/components/Lightbox.astro";
+import GiscusComments from "@/components/GiscusComments.astro";
 
 interface Props {
-  snippet: CollectionEntry<'snippets'>;
+    snippet: CollectionEntry<"snippets">;
 }
 
 const { snippet } = Astro.props;
@@ -20,135 +27,202 @@ const { snippet } = Astro.props;
 const seoData = generateSnippetSEO(snippet, Astro.url.href);
 
 const { Content, headings } = await render(snippet);
-const { wordCount } = processMarkdown(snippet.body || '');
-const readingTime = calculateReadingTime(snippet.body || '');
+const { wordCount } = processMarkdown(snippet.body || "");
+const readingTime = calculateReadingTime(snippet.body || "");
 
 const hideTOC = snippet.data.hideTOC === true;
-const shouldShowTOC = siteConfig.tableOfContents.enabled && !hideTOC && headings.length > 0;
+const shouldShowTOC =
+    siteConfig.tableOfContents.enabled && !hideTOC && headings.length > 0;
 const toc = shouldShowTOC ? await generateTOC(headings) : [];
 
 // Normalize optional image field
 let rawImage = snippet.data.image;
 if (Array.isArray(rawImage)) {
-  rawImage = rawImage[0];
+    rawImage = rawImage[0];
 }
 
-let cleanImage = typeof rawImage === 'string' ? rawImage : '';
-if (cleanImage && cleanImage.startsWith('[[') && cleanImage.endsWith(']]')) {
-  cleanImage = cleanImage.slice(2, -2);
+let cleanImage = typeof rawImage === "string" ? rawImage : "";
+if (cleanImage && cleanImage.startsWith("[[") && cleanImage.endsWith("]]")) {
+    cleanImage = cleanImage.slice(2, -2);
 }
 const hasImage = Boolean(cleanImage) && snippet.data.hideCoverImage !== true;
 ---
 
 <BaseLayout seoData={seoData}>
-  <div class="py-8 relative">
-    <div class="mx-auto px-4 sm:px-6 lg:px-8 relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>
-      <article class={`bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm ${hasImage ? 'overflow-hidden' : ''}`}>
-        {hasImage && (
-          <div class="h-40 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800">
-            <ImageWrapper
-              src={(() => {
-                if (!cleanImage) return '';
-                if (cleanImage.startsWith('http')) return cleanImage;
-                let path = cleanImage;
-                if (path.startsWith('images/') || path.startsWith('attachments/')) {
-                  path = path.replace(/^(images|attachments)\//, '');
+    <div class="py-8 relative">
+        <div
+            class="mx-auto px-4 sm:px-6 lg:px-8 relative"
+            style={`max-width: ${siteConfig.layout.contentWidth}`}
+        >
+            <article
+                class={`bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm ${hasImage ? "overflow-hidden" : ""}`}
+            >
+                {
+                    hasImage && (
+                        <div class="h-40 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800">
+                            <ImageWrapper
+                                src={(() => {
+                                    if (!cleanImage) return "";
+                                    if (cleanImage.startsWith("http"))
+                                        return cleanImage;
+                                    let path = cleanImage;
+                                    if (
+                                        path.startsWith("images/") ||
+                                        path.startsWith("attachments/")
+                                    ) {
+                                        path = path.replace(
+                                            /^(images|attachments)\//,
+                                            "",
+                                        );
+                                    }
+                                    return getOptimizedFormat(path);
+                                })()}
+                                basePath={(() => {
+                                    if (
+                                        !cleanImage ||
+                                        cleanImage.startsWith("http")
+                                    )
+                                        return "";
+                                    if (cleanImage.startsWith("attachments/")) {
+                                        return "/snippets/attachments/";
+                                    }
+                                    return `/snippets/${snippet.id}/`;
+                                })()}
+                                alt={
+                                    snippet.data.imageAlt ||
+                                    `Image for snippet: ${snippet.data.title}`
+                                }
+                                class="w-full h-full"
+                                width={800}
+                                height={450}
+                                format="webp"
+                                quality={85}
+                                loading="eager"
+                                fetchpriority="high"
+                            />
+                        </div>
+                    )
                 }
-                return getOptimizedFormat(path);
-              })()}
-              basePath={(() => {
-                if (!cleanImage || cleanImage.startsWith('http')) return '';
-                if (cleanImage.startsWith('attachments/')) {
-                  return '/snippets/attachments/';
-                }
-                return `/snippets/${snippet.id}/`;
-              })()}
-              alt={snippet.data.imageAlt || `Image for snippet: ${snippet.data.title}`}
-              class="w-full h-full"
-              width={800}
-              height={450}
-              format="webp"
-              quality={85}
-              loading="eager"
-              fetchpriority="high"
-            />
-          </div>
-        )}
 
-        <div class={`p-6 ${hasImage ? 'rounded-b-lg' : 'rounded-lg'}`}>
-          <header class="mb-4">
-            <h1 class="text-xl font-bold text-primary-900 dark:text-primary-50 mb-4 leading-tight">
-              {snippet.data.title}
-            </h1>
+                <div class={`p-6 ${hasImage ? "rounded-b-lg" : "rounded-lg"}`}>
+                    <header class="mb-4">
+                        <h1
+                            class="text-xl font-bold text-primary-900 dark:text-primary-50 mb-4 leading-tight"
+                        >
+                            {snippet.data.title}
+                        </h1>
 
-            <div class="flex flex-wrap items-center gap-3 text-sm text-primary-600 dark:text-primary-300 mb-4">
-              <time datetime={snippet.data.date.toISOString()} class="font-medium">
-                <span class="hidden sm:inline">{formatDate(snippet.data.date)}</span>
-                <span class="sm:hidden">{formatDateMobile(snippet.data.date)}</span>
-              </time>
+                        <div
+                            class="flex flex-wrap items-center gap-3 text-sm text-primary-600 dark:text-primary-300 mb-4"
+                        >
+                            <time
+                                datetime={snippet.data.date.toISOString()}
+                                class="font-medium"
+                            >
+                                <span class="hidden sm:inline"
+                                    >{formatDate(snippet.data.date)}</span
+                                >
+                                <span class="sm:hidden"
+                                    >{formatDateMobile(snippet.data.date)}</span
+                                >
+                            </time>
 
-              {snippet.data.language && (
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 border border-primary-200 dark:border-primary-700">
-                  {snippet.data.language}
-                </span>
-              )}
+                            {
+                                snippet.data.language && (
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 border border-primary-200 dark:border-primary-700">
+                                        {snippet.data.language}
+                                    </span>
+                                )
+                            }
 
-              {readingTime && (
-                <>
-                  <span class="text-primary-300 dark:text-primary-600">•</span>
-                  <span>
-                    <span class="hidden sm:inline">{readingTime.text && readingTime.text !== 'read0' && readingTime.text !== '' ? readingTime.text : '1 min read'}</span>
-                    <span class="sm:hidden">{getReadingTimeMobile(readingTime)}</span>
-                  </span>
-                </>
-              )}
+                            {
+                                readingTime && (
+                                    <>
+                                        <span class="text-primary-300 dark:text-primary-600">
+                                            •
+                                        </span>
+                                        <span>
+                                            <span class="hidden sm:inline">
+                                                {readingTime.text &&
+                                                readingTime.text !== "read0" &&
+                                                readingTime.text !== ""
+                                                    ? readingTime.text
+                                                    : "1 min read"}
+                                            </span>
+                                            <span class="sm:hidden">
+                                                {getReadingTimeMobile(
+                                                    readingTime,
+                                                )}
+                                            </span>
+                                        </span>
+                                    </>
+                                )
+                            }
 
-              {wordCount !== undefined && (
-                <>
-                  <span class="text-primary-300 dark:text-primary-600">•</span>
-                  <span>{wordCount === 1 ? '1 word' : `${wordCount} words`}</span>
-                </>
-              )}
-            </div>
+                            {
+                                wordCount !== undefined && (
+                                    <>
+                                        <span class="text-primary-300 dark:text-primary-600">
+                                            •
+                                        </span>
+                                        <span>
+                                            {wordCount === 1
+                                                ? "1 word"
+                                                : `${wordCount} words`}
+                                        </span>
+                                    </>
+                                )
+                            }
+                        </div>
 
-            {snippet.data.tags && snippet.data.tags.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {snippet.data.tags.map((tag) => (
-                  <span class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </header>
+                        {
+                            snippet.data.tags &&
+                                snippet.data.tags.length > 0 && (
+                                    <div class="flex flex-wrap gap-2">
+                                        {snippet.data.tags.map((tag) => (
+                                            <span class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )
+                        }
+                    </header>
 
-          <div class="prose dark:prose-dark max-w-none" id="snippet-content">
-            <Content />
-          </div>
+                    <div
+                        class="prose dark:prose-dark max-w-none"
+                        id="snippet-content"
+                    >
+                        <Content />
+                    </div>
+
+                    {
+                        siteConfig.postOptions.comments.enabled && (
+                            <div class="mt-12">
+                                <GiscusComments
+                                    postTitle={snippet.data.title}
+                                    postSlug={snippet.id}
+                                    postUrl={Astro.url.href}
+                                />
+                            </div>
+                        )
+                    }
+                </div>
+            </article>
+
+            {
+                shouldShowTOC && (
+                    <div class="hidden xl:block absolute top-0 left-full ml-1 w-[280px]">
+                        <div class="sticky top-24" id="toc">
+                            <TableOfContents headings={toc} />
+                        </div>
+                    </div>
+                )
+            }
         </div>
-      </article>
-
-          {siteConfig.postOptions.comments.enabled && (
-            <div class="mt-12">
-              <GiscusComments
-                postTitle={snippet.data.title}
-                postSlug={snippet.id}
-                postUrl={Astro.url.href}
-              />
-            </div>
-          )}
-
-      {shouldShowTOC && (
-        <div class="hidden xl:block absolute top-0 left-full ml-1 w-[280px]">
-          <div class="sticky top-24" id="toc">
-            <TableOfContents headings={toc} />
-          </div>
-        </div>
-      )}
     </div>
-  </div>
 
-  <Fragment slot="scripts">
-    <Lightbox />
-  </Fragment>
+    <Fragment slot="scripts">
+        <Lightbox />
+    </Fragment>
 </BaseLayout>
