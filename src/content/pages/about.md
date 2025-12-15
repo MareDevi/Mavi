@@ -13,3 +13,6 @@ Hi, I'm MareDevi
 - 一个苦逼大学生
 - 一个代码低手
 - 一个一无是处的普通人
+
+Email: me@maredevi.moe
+GPG: [76BE4021C5F8E09EEF13B76FB5EE10738FF307C0](/maredevi.asc)
