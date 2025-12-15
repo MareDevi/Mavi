@@ -28,6 +28,7 @@ export const GET: APIRoute = async () => {
   const pages = await getCollection("pages");
   const projects = await getCollection("projects");
   const docs = await getCollection("docs");
+  const snippets = await getCollection("snippets");
 
   // Filter posts based on environment (in dev, show all including drafts)
   const isDev = import.meta.env.DEV;
@@ -52,6 +53,12 @@ export const GET: APIRoute = async () => {
 
   const visibleDocs = siteConfig.optionalContentTypes.docs
     ? docs.filter((doc) => shouldShowContent(doc, isDev) && !doc.data.noIndex)
+    : [];
+
+  const visibleSnippets = siteConfig.optionalContentTypes.snippets
+    ? snippets.filter(
+        (snippet) => shouldShowContent(snippet, isDev) && !(snippet as any).data.noIndex
+      )
     : [];
 
   // Generate URLs
@@ -97,6 +104,18 @@ export const GET: APIRoute = async () => {
         <lastmod>${new Date().toISOString()}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
+      </url>
+    `);
+  }
+
+  // Snippets index page (only if snippets are enabled)
+  if (siteConfig.optionalContentTypes.snippets) {
+    urls.push(`
+      <url>
+        <loc>${siteUrl}snippets/</loc>
+        <lastmod>${new Date().toISOString()}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
       </url>
     `);
   }
@@ -149,6 +168,20 @@ export const GET: APIRoute = async () => {
         <loc>${siteUrl}docs/${slug}/</loc>
         <lastmod>${lastmod.toISOString()}</lastmod>
         <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+      </url>
+    `);
+  });
+
+  // Individual snippets
+  visibleSnippets.forEach((snippet) => {
+    const lastmod = snippet.data.date || new Date();
+    const slug = getSlugFromId(snippet.id);
+    urls.push(`
+      <url>
+        <loc>${siteUrl}snippets/${slug}/</loc>
+        <lastmod>${lastmod.toISOString()}</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.6</priority>
       </url>
     `);

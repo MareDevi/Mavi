@@ -9,6 +9,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 import DocumentationCard from '@/components/DocumentationCard.astro';
+import SnippetCard from '@/components/SnippetCard.astro';
 import Icon from '@/components/Icon.astro';
 import { optimizePostImagePath } from '@/utils/images';
 
@@ -106,6 +107,17 @@ if (siteConfig.homeOptions.docs.enabled && siteConfig.optionalContentTypes.docs)
   }
 }
 
+// Get featured snippets if enabled
+let featuredSnippets: any[] = [];
+if (siteConfig.homeOptions.snippets.enabled && siteConfig.optionalContentTypes.snippets) {
+  const allSnippets = await getCollection('snippets');
+  const visibleSnippets = sortPostsByDate(
+    allSnippets.filter((snippet) => shouldShowContent(snippet, isDev))
+  );
+
+  featuredSnippets = visibleSnippets.slice(0, siteConfig.homeOptions.snippets.count);
+}
+
 // Get home blurb content from special collection
 let homeBlurbContent = null;
 let HomeBlurbContent = null;
@@ -126,15 +138,17 @@ const hasFeaturedPost = siteConfig.homeOptions.featuredPost.enabled && featuredP
 const hasRecentPosts = siteConfig.homeOptions.recentPosts.enabled && previewPosts.length > 0;
 const hasProjects = siteConfig.homeOptions.projects.enabled && featuredProjects.length > 0;
 const hasDocs = siteConfig.homeOptions.docs.enabled && featuredDocs.length > 0;
+const hasSnippets = siteConfig.homeOptions.snippets.enabled && featuredSnippets.length > 0;
 
 // Count how many content types are being displayed
-const contentTypesCount = [hasFeaturedPost, hasRecentPosts, hasProjects, hasDocs].filter(Boolean).length;
+const contentTypesCount = [hasFeaturedPost, hasRecentPosts, hasProjects, hasDocs, hasSnippets].filter(Boolean).length;
 
 // Determine if we should use special treatment (only one content type is displayed)
 const useSpecialTreatment = contentTypesCount === 1;
 
 // Determine if only blurb content should be shown (no posts, projects, or docs)
 const onlyBlurbContent = contentTypesCount === 0 && siteConfig.homeOptions.blurb.placement !== 'none' && HomeBlurbContent;
+const hasAnyContent = contentTypesCount > 0;
 
 // Generate SEO data for homepage
 const seoData = generateHomeSEO(Astro.url.href);
@@ -195,7 +209,7 @@ const structuredData = {
             </div>
           </div>
         </article>
-      ) : processedPosts.length > 0 ? (
+      ) : hasAnyContent ? (
         <>
           <!-- Home blurb above posts -->
           {siteConfig.homeOptions.blurb.placement === 'above' && HomeBlurbContent && (
@@ -325,6 +339,42 @@ const structuredData = {
             </section>
           )}
 
+          <!-- Snippets -->
+          {siteConfig.homeOptions.snippets.enabled && featuredSnippets.length > 0 && (
+            <section class="mb-12">
+              {!useSpecialTreatment && (
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
+                    Snippets
+                  </h2>
+                  <a
+                    href="/snippets"
+                    class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
+                  >
+                    View all snippets →
+                  </a>
+                </div>
+              )}
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center md:justify-items-stretch">
+                {featuredSnippets.map((snippet, index) => (
+                  <SnippetCard snippet={snippet} eager={index < 4} />
+                ))}
+              </div>
+
+              {useSpecialTreatment && (
+                <div class="mt-8 text-center">
+                  <a
+                    href="/snippets"
+                    class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
+                  >
+                    View all snippets →
+                  </a>
+                </div>
+              )}
+            </section>
+          )}
+
           <!-- Home blurb below posts -->
           {siteConfig.homeOptions.blurb.placement === 'below' && HomeBlurbContent && (
             <section class="prose prose-sm dark:prose-dark max-w-none mt-16">
@@ -339,7 +389,7 @@ const structuredData = {
           <div class="max-w-md mx-auto">
             <Icon name="file-text" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
             <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-4">
-              No Posts Yet
+              No content yet
             </h2>
             <p class="text-primary-600 dark:text-primary-300 mb-8">
               This blog is just getting started. Check back soon for new content!
@@ -347,7 +397,7 @@ const structuredData = {
             {isDev && (
               <div class="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p class="text-sm text-blue-800 dark:text-blue-200">
-                  <strong>Dev Mode:</strong> Add some posts to the <code>content/posts/</code> directory to see them here.
+                  <strong>Dev Mode:</strong> Add content to the <code>content/</code> directory to see it here.
                 </p>
               </div>
             )}

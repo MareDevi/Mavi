@@ -64,6 +64,7 @@ export interface SiteConfig {
       pages: boolean;
       projects: boolean;
       docs: boolean;
+      snippets: boolean;
     };
     sections: {
       quickActions: boolean;
@@ -117,6 +118,10 @@ export interface SiteConfig {
       enabled: boolean;
       count: number;
     };
+    snippets: {
+      enabled: boolean;
+      count: number;
+    };
     blurb: {
       placement: "above" | "below" | "none";
     };
@@ -164,6 +169,7 @@ export interface SiteConfig {
   optionalContentTypes: {
     projects: boolean;
     docs: boolean;
+    snippets: boolean;
   };
 }
 
@@ -262,6 +268,8 @@ export const siteConfig: SiteConfig = {
       projects: false,
       // [CONFIG:COMMAND_PALETTE_SEARCH_DOCS]
       docs: false,
+      // [CONFIG:COMMAND_PALETTE_SEARCH_SNIPPETS]
+      snippets: true,
     },
     sections: {
       // [CONFIG:COMMAND_PALETTE_SECTIONS_QUICK_ACTIONS]
@@ -312,6 +320,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:NAVIGATION_PAGES]
     pages: [
       { title: "Posts", url: "/posts/" },
+      { title: "Snippets", url: "/snippets/" },
       { title: "Projects", url: "/projects/" },
       { title: "Docs", url: "/docs/" },
       { title: "Friends", url: "/friends/" },
@@ -342,6 +351,8 @@ export const siteConfig: SiteConfig = {
     projects: true, // Enable projects section
     // [CONFIG:OPTIONAL_CONTENT_TYPES_DOCS]
     docs: true, // Enable documentation section
+    // [CONFIG:OPTIONAL_CONTENT_TYPES_SNIPPETS]
+    snippets: true, // Enable snippets section
   },
 
   // Home Options
@@ -371,6 +382,12 @@ export const siteConfig: SiteConfig = {
       enabled: true, // Show featured docs on homepage
       // [CONFIG:HOME_OPTIONS_DOCS_COUNT]
       count: 3, // Number of docs to show
+    },
+    snippets: {
+      // [CONFIG:HOME_OPTIONS_SNIPPETS_ENABLED]
+      enabled: true, // Show snippets on homepage
+      // [CONFIG:HOME_OPTIONS_SNIPPETS_COUNT]
+      count: 6, // Number of snippets to show
     },
     blurb: {
       // [CONFIG:HOME_OPTIONS_BLURB_PLACEMENT]

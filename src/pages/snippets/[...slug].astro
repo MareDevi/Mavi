@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { shouldShowContent } from '@/utils/markdown';
+import SnippetLayout from '@/layouts/SnippetLayout.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  if (!siteConfig.optionalContentTypes.snippets) {
+    return [];
+  }
+
+  const snippets = await getCollection('snippets');
+  const isDev = import.meta.env.DEV;
+  const visibleSnippets = snippets.filter((snippet) =>
+    shouldShowContent(snippet, isDev)
+  );
+
+  return visibleSnippets.map((snippet) => ({
+    params: { slug: snippet.id },
+    props: { snippet },
+  }));
+};
+
+export interface Props {
+  snippet: any;
+}
+
+const { snippet } = Astro.props;
+
+if (!siteConfig.optionalContentTypes.snippets) {
+  return Astro.redirect('/404');
+}
+
+const isDev = import.meta.env.DEV;
+if (!snippet || !shouldShowContent(snippet, isDev)) {
+  return Astro.redirect('/404');
+}
+---
+
+<SnippetLayout snippet={snippet} />

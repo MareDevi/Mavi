@@ -17,6 +17,10 @@ export type Docs = CollectionEntry<"docs">;
 
 export type DocsData = CollectionEntry<"docs">["data"];
 
+export type Snippet = CollectionEntry<"snippets">;
+
+export type SnippetData = CollectionEntry<"snippets">["data"];
+
 export interface Heading {
   depth: number;
   slug: string;
@@ -49,7 +53,7 @@ export interface CommandPaletteItem {
   title: string;
   description?: string;
   url: string;
-  type: "post" | "page" | "project" | "docs" | "social" | "external" | "action";
+  type: "post" | "page" | "project" | "docs" | "snippet" | "social" | "external" | "action";
   icon?: string;
 }
 

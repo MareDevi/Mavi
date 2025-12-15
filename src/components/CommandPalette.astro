@@ -136,11 +136,11 @@ import Icon from './Icon.astro';
                         <a 
                           href={page.url}
                           class="w-full flex items-center space-x-3 px-3 py-2 hover:bg-primary-50 dark:hover:bg-primary-800 rounded-lg transition-colors group"
-                          target={page.url.startsWith('http') ? '_blank' : undefined}
+                          target={page.url && page.url.startsWith('http') ? '_blank' : undefined}
                         >
                           <Icon name="file-text" class="w-4 h-4 text-primary-500 dark:text-primary-400 group-hover:text-highlight-500" />
                           <span class="text-primary-900 dark:text-primary-50 font-medium">{page.title}</span>
-                          {page.url.startsWith('http') && (
+                          {page.url && page.url.startsWith('http') && (
                             <Icon name="external-link" class="w-3 h-3 text-primary-400 dark:text-primary-500 ml-auto" />
                           )}
                         </a>
@@ -151,7 +151,7 @@ import Icon from './Icon.astro';
                         </div>
                       )}
                       {/* Children items (indented) */}
-                      {page.children.map(child => (
+                      {(page.children ?? []).map(child => (
                         <a 
                           href={child.url || '#'}
                           class="w-full flex items-center space-x-3 px-3 py-2 pl-8 hover:bg-primary-50 dark:hover:bg-primary-800 rounded-lg transition-colors group"
@@ -242,7 +242,7 @@ import Icon from './Icon.astro';
     title: string;
     description?: string; // Optional description for posts
     url: string;
-    type: 'post' | 'page' | 'project' | 'documentation' | 'docs' | 'action';
+    type: 'post' | 'page' | 'project' | 'documentation' | 'docs' | 'snippet' | 'action';
     score?: number; // Score for search relevance
     tags?: string[]; // Tags for posts
   }
@@ -386,13 +386,15 @@ import Icon from './Icon.astro';
           posts: true,
           pages: false,
           projects: false,
-          docs: false
+          docs: false,
+          snippets: true
         };
 
         // Get optional content types configuration
         const optionalContentTypes = (window as any).siteConfig?.optionalContentTypes || {
           projects: true,
-          docs: true
+          docs: true,
+          snippets: true
         };
 
         const allItems = [];
@@ -446,11 +448,22 @@ import Icon from './Icon.astro';
           promises.push(Promise.resolve([]));
         }
 
+        // Load snippets if enabled in search config AND snippets content type is enabled
+        if (searchConfig.snippets && optionalContentTypes.snippets) {
+          promises.push(
+            fetch('/api/snippets.json').then(response => 
+              response.ok ? response.json() : []
+            ).catch(() => [])
+          );
+        } else {
+          promises.push(Promise.resolve([]));
+        }
+
         // Wait for all API calls to complete
-        const [posts, pages, projects, docs] = await Promise.all(promises);
+        const [posts, pages, projects, docs, snippets] = await Promise.all(promises);
 
         // Add items to the array
-        allItems.push(...posts, ...pages, ...projects, ...docs);
+        allItems.push(...posts, ...pages, ...projects, ...docs, ...snippets);
 
         this.items = allItems;
         // Don't initialize Fuse.js immediately - wait until first search
@@ -839,13 +852,15 @@ import Icon from './Icon.astro';
         posts: true,
         pages: false,
         projects: false,
-        docs: false
+        docs: false,
+        snippets: true
       };
 
       // Get optional content types configuration
       const optionalContentTypes = (window as any).siteConfig?.optionalContentTypes || {
         projects: true,
-        docs: true
+        docs: true,
+        snippets: true
       };
 
       // Filter items by enabled content types
@@ -854,6 +869,7 @@ import Icon from './Icon.astro';
       if (searchConfig.pages) enabledTypes.push('page');
       if (searchConfig.projects && optionalContentTypes.projects) enabledTypes.push('project');
       if (searchConfig.docs && optionalContentTypes.docs) enabledTypes.push('docs', 'documentation');
+      if (searchConfig.snippets && optionalContentTypes.snippets) enabledTypes.push('snippet');
 
       const filteredByType = this.filteredItems.filter((item: CommandPaletteItem) => enabledTypes.includes(item.type));
 
@@ -866,7 +882,8 @@ import Icon from './Icon.astro';
         posts: filteredByType.filter(item => item.type === 'post'),
         pages: filteredByType.filter(item => item.type === 'page'),
         projects: filteredByType.filter(item => item.type === 'project'),
-        docs: filteredByType.filter(item => item.type === 'docs' || item.type === 'documentation')
+        docs: filteredByType.filter(item => item.type === 'docs' || item.type === 'documentation'),
+        snippets: filteredByType.filter(item => item.type === 'snippet')
       };
 
       // Render each content type section
@@ -883,7 +900,8 @@ import Icon from './Icon.astro';
             posts: 'Posts',
             pages: 'Pages', 
             projects: 'Projects',
-            docs: 'Documentation'
+            docs: 'Documentation',
+            snippets: 'Snippets'
           };
           
           header.textContent = `${sectionTitles[type as keyof typeof sectionTitles]} (${items.length})`;

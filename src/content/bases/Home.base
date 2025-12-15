@@ -157,6 +157,14 @@ views:
     maxTagsToShow: 2
     propertyDisplay2: note.version
   - type: bases-cms
+    name: Snippets
+    filters:
+      and:
+        - file.inFolder("snippets")
+    newNoteLocation: /snippets/
+    titleProperty: note.title
+    customizeNewButton: true
+  - type: bases-cms
     name: Special Pages
     filters:
       and:

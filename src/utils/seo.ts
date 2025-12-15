@@ -3,6 +3,7 @@ import type {
   Page,
   Project,
   Docs,
+  Snippet,
   SEOData,
   OpenGraphImage,
 } from "@/types";
@@ -252,6 +253,58 @@ export function generateDocumentationSEO(
       ? [`${category || "Documentation"}`, `version ${version}`]
       : [category || "Documentation"],
     noIndex: documentation.data.noIndex || false,
+  };
+}
+
+// Generate SEO data for snippets
+export function generateSnippetSEO(snippet: Snippet, url: string): SEOData {
+  const { title, description, image, date, tags, language } = snippet.data;
+
+  let ogImage: OpenGraphImage | undefined;
+
+  if (image) {
+    const imagePath = extractImagePath(image);
+
+    let imageUrl: string;
+    if (imagePath.startsWith("http")) {
+      imageUrl = imagePath;
+    } else {
+      const optimizedPath = optimizeContentImagePath(
+        imagePath,
+        "snippets",
+        snippet.id,
+        snippet.id
+      );
+      imageUrl = `${siteConfig.site}${optimizedPath}`;
+    }
+
+    ogImage = {
+      url: imageUrl,
+      alt: snippet.data.imageAlt || `Featured image for snippet: ${title}`,
+      width: 1200,
+      height: 630,
+    };
+  } else {
+    ogImage = getDefaultOGImage();
+    ogImage = {
+      ...ogImage,
+      url: `${siteConfig.site}${ogImage.url}`,
+    };
+  }
+
+  return {
+    title: `${title} | ${siteConfig.title}`,
+    description: description || `Snippet: ${title}`,
+    canonical: url,
+    ogImage,
+    ogType: "article",
+    publishedTime: date.toISOString(),
+    modifiedTime: date.toISOString(),
+    tags:
+      tags?.filter((tag) => tag !== null) ||
+      (language ? [language] : undefined) ||
+      undefined,
+    noIndex: snippet.data.noIndex || false,
   };
 }
 
