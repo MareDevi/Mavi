@@ -15,4 +15,4 @@ Hi, I'm MareDevi
 - 一个一无是处的普通人
 
 Email: me@maredevi.moe
-GPG: [76BE4021C5F8E09EEF13B76FB5EE10738FF307C0](/maredevi.asc)
+GPG: [76BE4021C5F8E09EEF13B76FB5EE10738FF307C0](https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x76be4021c5f8e09eef13b76fb5ee10738ff307c0)
