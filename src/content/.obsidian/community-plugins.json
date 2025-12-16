@@ -19,8 +19,8 @@
   "bases-cms",
   "astro-composer",
   "astro-modular-settings",
-  "obsidian-git",
   "oxygen-settings",
   "obsidian42-brat",
-  "ui-tweaker"
+  "ui-tweaker",
+  "obsidian-git"
 ]
