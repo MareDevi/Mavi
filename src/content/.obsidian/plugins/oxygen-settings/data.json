@@ -1,8 +1,8 @@
 {
-  "lightStyle": "minimal-light",
-  "darkStyle": "minimal-dark",
-  "lightScheme": "minimal-nord-light",
-  "darkScheme": "minimal-dracula-dark",
+  "lightStyle": "oxygen-light",
+  "darkStyle": "oxygen-dark",
+  "lightScheme": "oxygen-nord-light",
+  "darkScheme": "oxygen-dracula-dark",
   "editorFont": "",
   "lineHeight": 1.5,
   "lineWidth": 40,
@@ -549,5 +549,8 @@
   "lineNumberColorDark": "",
   "lineNumberColorActiveLight": "",
   "lineNumberColorActiveDark": "",
-  "dashedUnderlineInternal": false
+  "dashedUnderlineInternal": false,
+  "_migrationVersions": [
+    "minimal-to-oxygen-prefix-v1"
+  ]
 }
