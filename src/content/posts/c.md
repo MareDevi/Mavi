@@ -105,7 +105,8 @@ Buffer(Buffer&& other) noexcept {
 
 最后，他在我的电脑上跑出了下面的成绩：  
 
-![](https://static.maredevi.fun/piclist/20251222175923679.png)
+![](https://static.maredevi.fun/piclist/20251222175923679.png)   
+
 
 可以看到，利用移动构造，我们比拷贝构造快了整整28.25倍！
 
