@@ -4453,7 +4453,7 @@ var ScrollLayoutManager = class {
       const cardMinWidth = currentSettings.cardSize;
       const imageAspectRatio = currentSettings.imageAspectRatio;
       this.containerEl.style.setProperty("--card-min-width", `${cardMinWidth}px`);
-      this.containerEl.style.setProperty("--dynamic-views-image-aspect-ratio", String(imageAspectRatio));
+      this.containerEl.style.setProperty("--bases-cms-image-aspect-ratio", String(imageAspectRatio));
       this.lastCardSize = cardMinWidth;
       this.lastImageAspectRatio = imageAspectRatio;
     };
@@ -4472,7 +4472,7 @@ var ScrollLayoutManager = class {
       const currentImageAspectRatio = currentSettings.imageAspectRatio;
       if (this.lastCardSize !== currentCardSize || this.lastImageAspectRatio !== currentImageAspectRatio) {
         this.containerEl.style.setProperty("--card-min-width", `${currentCardSize}px`);
-        this.containerEl.style.setProperty("--dynamic-views-image-aspect-ratio", String(currentImageAspectRatio));
+        this.containerEl.style.setProperty("--bases-cms-image-aspect-ratio", String(currentImageAspectRatio));
         this.lastCardSize = currentCardSize;
         this.lastImageAspectRatio = currentImageAspectRatio;
       }
@@ -4486,7 +4486,7 @@ var ScrollLayoutManager = class {
   }
   updateGridLayout(settings) {
     this.containerEl.style.setProperty("--card-min-width", `${settings.cardSize}px`);
-    this.containerEl.style.setProperty("--dynamic-views-image-aspect-ratio", String(settings.imageAspectRatio));
+    this.containerEl.style.setProperty("--bases-cms-image-aspect-ratio", String(settings.imageAspectRatio));
     this.lastCardSize = settings.cardSize;
     this.lastImageAspectRatio = settings.imageAspectRatio;
   }

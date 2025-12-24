@@ -1,18 +1,50 @@
 {
   "nodes": [
     {
+      "id": "c",
+      "type": "post",
+      "title": "C++中的右值引用与移动语义",
+      "slug": "c",
+      "connections": 1
+    },
+    {
       "id": "hello-world",
       "type": "post",
       "title": "Hello World",
       "slug": "hello-world",
       "connections": 0
+    },
+    {
+      "id": "pull-push",
+      "type": "post",
+      "title": "Pull 与 Push 模式",
+      "slug": "pull-push",
+      "connections": 1
+    },
+    {
+      "id": "rust-pin",
+      "type": "post",
+      "title": "Rust 中的 Pin",
+      "slug": "rust-pin",
+      "connections": 2
     }
   ],
-  "connections": [],
+  "connections": [
+    {
+      "source": "rust-pin",
+      "target": "pull-push",
+      "type": "link"
+    },
+    {
+      "source": "rust-pin",
+      "target": "c",
+      "type": "link"
+    }
+  ],
   "metadata": {
-    "totalPosts": 1,
-    "totalConnections": 0,
+    "totalPosts": 4,
+    "totalConnections": 2,
     "maxNodesApplied": false,
-    "originalNodeCount": 1
+    "originalNodeCount": 4
   }
 }
