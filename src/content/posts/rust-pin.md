@@ -6,7 +6,7 @@ tags:
   - rsut
   - async
   - cpp
-image: ""
+image: https://static.maredevi.fun/piclist/20251224_184529.jpg
 imageAlt: ""
 imageOG: false
 hideCoverImage: false
