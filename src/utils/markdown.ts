@@ -40,13 +40,23 @@ export function processMarkdown(content: string): {
     .replace(/\n+/g, " ") // Line breaks
     .trim();
 
-  const words = plainText.split(/\s+/).filter((word) => word.length > 0);
-  const wordCount = words.length;
+  // Count words properly for both CJK (Chinese, Japanese, Korean) and other languages
+  // CJK characters are counted individually since they don't use spaces between words
+  const cjkPattern = /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af]/g;
+  const cjkCharacters = plainText.match(cjkPattern) || [];
+  const cjkCount = cjkCharacters.length;
+  
+  // Remove CJK characters and count remaining words by whitespace
+  const nonCjkText = plainText.replace(cjkPattern, ' ');
+  const nonCjkWords = nonCjkText.split(/\s+/).filter((word) => word.length > 0);
+  const nonCjkCount = nonCjkWords.length;
+  
+  const wordCount = cjkCount + nonCjkCount;
 
-  // Create excerpt (first 150 words or until first heading)
-  const excerptWords = words.slice(0, 150);
-  const excerpt = excerptWords.join(" ");
-  const hasMore = wordCount > 150;
+  // Create excerpt (first ~500 characters which works for both CJK and non-CJK text)
+  const excerptLength = 500;
+  const excerpt = plainText.slice(0, excerptLength);
+  const hasMore = plainText.length > excerptLength;
 
   return {
     excerpt: hasMore ? excerpt + "..." : excerpt,
@@ -78,17 +88,29 @@ export function calculateReadingTime(content: string): ReadingTime {
     .replace(/\n+/g, " ") // Line breaks
     .trim();
 
-  const words = plainText.split(/\s+/).filter((word) => word.length > 0);
-  const wordCount = words.length;
+  // Count words properly for both CJK (Chinese, Japanese, Korean) and other languages
+  // CJK characters are counted individually since they don't use spaces between words
+  const cjkPattern = /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af]/g;
+  const cjkCharacters = plainText.match(cjkPattern) || [];
+  const cjkCount = cjkCharacters.length;
+  
+  // Remove CJK characters and count remaining words by whitespace
+  const nonCjkText = plainText.replace(cjkPattern, ' ');
+  const nonCjkWords = nonCjkText.split(/\s+/).filter((word) => word.length > 0);
+  const nonCjkCount = nonCjkWords.length;
+  
+  const wordCount = cjkCount + nonCjkCount;
 
-  // Average reading speed is 200-250 words per minute, using 225
-  const wordsPerMinute = 225;
-  const minutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+  // Reading speed: ~225 words per minute for English, ~400 characters per minute for CJK
+  // Calculate weighted average reading time
+  const cjkReadingTimeMinutes = cjkCount / 400;
+  const nonCjkReadingTimeMinutes = nonCjkCount / 225;
+  const totalMinutes = Math.max(1, Math.ceil(cjkReadingTimeMinutes + nonCjkReadingTimeMinutes));
 
   return {
-    text: `${minutes} min read`,
-    minutes: minutes,
-    time: minutes * 60 * 1000, // in milliseconds
+    text: `${totalMinutes} min read`,
+    minutes: totalMinutes,
+    time: totalMinutes * 60 * 1000, // in milliseconds
     words: wordCount,
   };
 }

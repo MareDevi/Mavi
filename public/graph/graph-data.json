@@ -1,6 +1,13 @@
 {
   "nodes": [
     {
+      "id": "2025",
+      "type": "post",
+      "title": "2025总结",
+      "slug": "2025",
+      "connections": 0
+    },
+    {
       "id": "c",
       "type": "post",
       "title": "C++中的右值引用与移动语义",
@@ -42,9 +49,9 @@
     }
   ],
   "metadata": {
-    "totalPosts": 4,
+    "totalPosts": 5,
     "totalConnections": 2,
     "maxNodesApplied": false,
-    "originalNodeCount": 4
+    "originalNodeCount": 5
   }
 }
