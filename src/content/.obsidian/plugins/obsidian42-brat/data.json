@@ -1,5 +1,7 @@
 {
   "pluginList": [
+    "davidvkimball/obsidian-image-manager",
+    "davidvkimball/obsidian-home-base",
     "davidvkimball/obsidian-explorer-focus",
     "pjeby/hot-reload",
     "mProjectsCode/obsidian-theme-hot-reload-plugin",
@@ -15,6 +17,14 @@
     "davidvkimball/obsidian-astro-composer"
   ],
   "pluginSubListFrozenVersion": [
+    {
+      "repo": "davidvkimball/obsidian-image-manager",
+      "version": "latest"
+    },
+    {
+      "repo": "davidvkimball/obsidian-home-base",
+      "version": "latest"
+    },
     {
       "repo": "davidvkimball/obsidian-explorer-focus",
       "version": "latest"

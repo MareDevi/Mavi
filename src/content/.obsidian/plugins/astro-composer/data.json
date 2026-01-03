@@ -69,6 +69,7 @@
     "commandId": "astro-modular-settings:open-settings",
     "iconId": "wrench"
   },
+  "showMdxFilesInExplorer": false,
   "linkBasePath": "/posts/",
   "enableAutoRename": true,
   "enableAutoInsertFrontmatter": true,

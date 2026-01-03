@@ -1,0 +1,23 @@
+{
+  "homeBasePath": "bases/Home.base",
+  "homeBaseType": "Graph view",
+  "homeBaseValue": "bases/Home.base",
+  "openOnStartup": true,
+  "openWhenEmpty": false,
+  "openViewMode": "default",
+  "openMode": "replace-all",
+  "manualOpenMode": "retain",
+  "replaceNewTab": false,
+  "newTabMode": "only-when-empty",
+  "keepExistingTabs": false,
+  "showStickyHomeIcon": true,
+  "stickyIconName": "home-base",
+  "hideHomeTabHeader": true,
+  "replaceMobileNewTab": false,
+  "separateMobile": false,
+  "mobileHomeBasePath": "",
+  "mobileHomeBaseType": "File",
+  "mobileHomeBaseValue": "",
+  "commandOnOpen": "",
+  "stickyIconReplaceTab": false
+}
