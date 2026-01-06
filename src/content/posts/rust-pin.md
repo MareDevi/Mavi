@@ -3,9 +3,9 @@ title: Rust 中的 Pin
 date: 2025-12-24
 description: ""
 tags:
-  - rsut
   - async
   - cpp
+  - rust
 image: https://static.maredevi.fun/piclist/20251224_184529.jpg
 imageAlt: ""
 imageOG: false

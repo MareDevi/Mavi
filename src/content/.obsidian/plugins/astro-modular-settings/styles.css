@@ -764,8 +764,9 @@ body[data-astro-modular-ribbon-removed="true"] .menu-item .menu-item-icon:has(.l
 }
 
 /* Fix indentation for heading settings - remove padding/margin */
-/* Obsidian uses .setting-item-heading class for headings created with setHeading() */
-.astro-modular-settings .setting-item-heading {
+/* Only apply to headings within .settings-section (Navigation pages and Social links) */
+/* This excludes headings created by createSettingsGroup in other tabs */
+.astro-modular-settings .settings-section .setting-item-heading {
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 	padding-left: 0 !important;
@@ -773,13 +774,13 @@ body[data-astro-modular-ribbon-removed="true"] .menu-item .menu-item-icon:has(.l
 	border: none !important;
 }
 
-.astro-modular-settings .setting-item-heading .setting-item-name {
+.astro-modular-settings .settings-section .setting-item-heading .setting-item-name {
 	margin: 0 !important;
 	padding: 0 !important;
 	font-weight: var(--font-medium);
 }
 
-.astro-modular-settings .setting-item-heading .setting-item-info {
+.astro-modular-settings .settings-section .setting-item-heading .setting-item-info {
 	margin: 0 !important;
 	padding: 0 !important;
 }
@@ -1828,6 +1829,17 @@ body[data-astro-modular-ribbon-removed="true"] .menu-item .menu-item-icon:has(.l
 	.simple-color-input label {
 		min-width: auto;
 	}
+}
+
+/* Group settings compatibility styling for older Obsidian builds (< 1.11.0) */
+/* Scoped to only this plugin's settings container to avoid affecting other plugins */
+.astro-modular-settings-settings-compat .setting-group-heading h3 {
+	margin: 0 0 0.75rem;
+	padding-bottom: 0.5rem;
+	padding-top: 0.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	border-bottom: none !important;
 }
 
 /* Fix checkbox checkmark centering - SCOPED to plugin UI only */
