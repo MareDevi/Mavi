@@ -4,7 +4,6 @@
   "tag-wrangler",
   "statusbar-organizer",
   "settings-search",
-  "astro-composer",
   "astro-modular-settings",
   "bases-cms",
   "cmdr",
@@ -12,11 +11,10 @@
   "explorer-focus",
   "seo",
   "property-over-file-name",
-  "oxygen-settings",
   "iconic",
   "image-manager",
-  "home-base",
   "alias-file-name-history",
-  "obsidian42-brat",
-  "obsidian-git"
+  "astro-composer",
+  "oxygen-settings",
+  "home-base"
 ]
