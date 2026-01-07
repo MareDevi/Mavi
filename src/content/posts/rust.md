@@ -1,7 +1,7 @@
 ---
 title: Rust中的迭代器
 date: 2026-01-06
-description: ""
+description: "全面介绍 Rust 迭代器设计模式。从核心的 Lazy 特性到常用的适配器与消费者，再到 Peekable、scan、fold 等高级用法，以及 Rayon 并行迭代器的使用。"
 tags:
   - rust
   - cs

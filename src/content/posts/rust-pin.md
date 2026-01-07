@@ -1,7 +1,7 @@
 ---
 title: Rust 中的 Pin
 date: 2025-12-24
-description: ""
+description: "详解 Rust 异步编程中的 Pin 概念。通过分析自引用结构体的内存安全问题，阐述为什么我们需要 Pin，以及它是如何通过禁止移动来保证内存安全的。"
 tags:
   - async
   - cpp

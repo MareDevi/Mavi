@@ -1,7 +1,7 @@
 ---
 title: Hello World
 date: 2025-12-14
-description: ""
+description: "博客的重启与新域名的启用。新的开始，新的篇章。"
 tags: []
 image: https://s2.loli.net/2024/11/06/QKHhfPGqZIC8dWe.jpg
 imageAlt: ""

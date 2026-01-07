@@ -1,7 +1,7 @@
 ---
 title: C++中的右值引用与移动语义
 date: 2025-12-22
-description: ""
+description: "深入解析 C++11 引入的右值引用与移动语义，通过 Benchmark 实测对比其与传统拷贝构造的性能差异，揭示 std::move 的本质。"
 tags:
   - cpp
   - note
@@ -31,7 +31,7 @@ For an example :  `int a = 10`,其中，`a` 就是一个左值。
 
 - **右值（Rvalue）**:
 	- 没有名字，没有地址，将亡的对象。（也就是临时对象）
-右值通常是字量面，表达式求值的结果，或者函数返回的非引用对象。
+右值通常是字面量，表达式求值的结果，或者函数返回的非引用对象。
 For an example: `10`,`x+y`,`func_return_obj()` 。
 
 > [!tip] Tip

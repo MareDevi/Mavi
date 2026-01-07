@@ -1,7 +1,7 @@
 ---
 title: Pull 与 Push 模式
 date: 2025-12-22
-description: ""
+description: "深入对比计算机科学中的 Pull 与 Push 数据流模式，并结合 Rust Future 与 C++20 协程的实现机制，分析其在异步编程中的异同与优劣。"
 tags:
   - cpp
   - rust
@@ -14,7 +14,7 @@ hideTOC: false
 targetKeyword: ""
 draft: false
 ---
-“Pul”和“Push”模型是计算机科学中关于**数据流向**和**控制权**的两种最基本的架构模式。
+“Pull”和“Push”模型是计算机科学中关于**数据流向**和**控制权**的两种最基本的架构模式。
 
 它们的本质区别在于：**是谁发起了“数据传输”这个动作？**
 - **Producer：** 产生数据的一方。
