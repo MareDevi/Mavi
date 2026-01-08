@@ -27,11 +27,7 @@
     "rulePage": "file"
   },
   "appIcons": {},
-  "tabIcons": {
-    "file-explorer": {
-      "icon": "lucide-folder"
-    }
-  },
+  "tabIcons": {},
   "fileIcons": {},
   "bookmarkIcons": {},
   "tagIcons": {},

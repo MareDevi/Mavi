@@ -1843,7 +1843,7 @@ export const siteConfig = {
 theme: "oxygen",  // Available: Oxygen, Minimal, Atom, Ayu, Catppuccin, Charcoal, Dracula, Everforest, Flexoki, Gruvbox, macOS, Nord, Obsidian, Rosé Pine, Sky, Solarized, Things
 availableThemes: "all",  // "all" or array like ["oxygen", "minimal", "nord"] to limit user choices
 layout: {
-  contentWidth: "100rem",
+  contentWidth: "45rem",
 },
 postsPerPage: 5,
 ```
@@ -2322,7 +2322,7 @@ heading: "Inter",
 mono: "JetBrains Mono",
 
 // [CONFIG:LAYOUT_CONTENT_WIDTH]
-contentWidth: "100rem",
+contentWidth: "45rem",
 
 // [CONFIG:FOOTER_ENABLED]
 enabled: true,

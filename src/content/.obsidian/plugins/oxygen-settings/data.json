@@ -1,8 +1,8 @@
 {
   "lightStyle": "oxygen-light",
   "darkStyle": "oxygen-dark",
-  "lightScheme": "oxygen-nord-light",
-  "darkScheme": "oxygen-dracula-dark",
+  "lightScheme": "oxygen-oxygen-light",
+  "darkScheme": "oxygen-oxygen-dark",
   "editorFont": "",
   "lineHeight": 1.5,
   "lineWidth": 40,
@@ -82,6 +82,7 @@
   "animationPersonality": "default",
   "animationSpeed": 0.7,
   "enableBlur": false,
+  "useDefaultFolderIcon": false,
   "hideVault": false,
   "hideTitleBarOnHover": false,
   "hideTabs": false,

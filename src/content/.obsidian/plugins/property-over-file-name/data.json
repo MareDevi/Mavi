@@ -12,5 +12,6 @@
   "enableForExplorer": false,
   "folderNoteFilename": "index",
   "enableForWindowFrame": true,
+  "enableMdxSupport": false,
   "enableForWindowTitle": true
 }

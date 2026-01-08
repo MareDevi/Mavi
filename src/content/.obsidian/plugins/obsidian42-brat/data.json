@@ -1,5 +1,10 @@
 {
   "pluginList": [
+    "davidvkimball/obsidian-image-manager",
+    "davidvkimball/obsidian-home-base",
+    "davidvkimball/obsidian-explorer-focus",
+    "pjeby/hot-reload",
+    "mProjectsCode/obsidian-theme-hot-reload-plugin",
     "davidvkimball/obsidian-ui-tweaker",
     "davidvkimball/obsidian-vault-cms",
     "davidvkimball/obsidian-bases-cms",
@@ -12,6 +17,26 @@
     "davidvkimball/obsidian-astro-composer"
   ],
   "pluginSubListFrozenVersion": [
+    {
+      "repo": "davidvkimball/obsidian-image-manager",
+      "version": "latest"
+    },
+    {
+      "repo": "davidvkimball/obsidian-home-base",
+      "version": "latest"
+    },
+    {
+      "repo": "davidvkimball/obsidian-explorer-focus",
+      "version": "latest"
+    },
+    {
+      "repo": "pjeby/hot-reload",
+      "version": "0.3.0"
+    },
+    {
+      "repo": "mProjectsCode/obsidian-theme-hot-reload-plugin",
+      "version": "0.0.4"
+    },
     {
       "repo": "davidvkimball/obsidian-ui-tweaker",
       "version": "latest"

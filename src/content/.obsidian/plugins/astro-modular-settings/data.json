@@ -1,7 +1,7 @@
 {
-  "runWizardOnStartup": false,
+  "runWizardOnStartup": true,
   "currentTemplate": "standard",
-  "currentTheme": "dracula",
+  "currentTheme": "oxygen",
   "customThemeFile": "custom",
   "contentOrganization": "file-based",
   "themeColors": {
@@ -12,16 +12,16 @@
     }
   },
   "siteInfo": {
-    "site": "https://www.maredevi.moe",
-    "title": "MareDevi's Blog",
-    "description": "Hi. 这里是 MareDevi 的博客，一个存放我的笔记与思绪的小杂间。",
-    "author": "MareDevi",
-    "language": "zh",
+    "site": "https://astro-modular.netlify.app",
+    "title": "Astro Modular",
+    "description": "A flexible blog theme designed for Obsidian users.",
+    "author": "David V. Kimball",
+    "language": "en",
     "faviconThemeAdaptive": true,
     "defaultOgImageAlt": "Astro Modular logo."
   },
   "layout": {
-    "contentWidth": "100rem"
+    "contentWidth": "45rem"
   },
   "tableOfContents": {
     "enabled": true,
@@ -53,10 +53,6 @@
         "url": "/docs/"
       },
       {
-        "title": "Friends",
-        "url": "/friends/"
-      },
-      {
         "title": "About",
         "url": "/about/",
         "children": [
@@ -74,12 +70,12 @@
     "social": [
       {
         "title": "X",
-        "url": "https://x.com/maredevi",
+        "url": "https://x.com/davidvkimball",
         "icon": "x-twitter"
       },
       {
         "title": "GitHub",
-        "url": "https://github.com/maredevi",
+        "url": "https://github.com/davidvkimball",
         "icon": "github"
       }
     ]
@@ -148,26 +144,25 @@
     "postCardAspectRatio": "og",
     "customPostCardAspectRatio": "2.5/1",
     "comments": {
-      "enabled": true,
+      "enabled": false,
       "provider": "giscus",
-      "rawScript": "<script src=\"https://giscus.app/client.js\"\n        data-repo=\"MareDevi/Mavi\"\n        data-repo-id=\"R_kgDOQofjrA\"\n        data-category=\"General\"\n        data-category-id=\"DIC_kwDOQofjrM4Czxpo\"\n        data-mapping=\"pathname\"\n        data-strict=\"0\"\n        data-reactions-enabled=\"1\"\n        data-emit-metadata=\"0\"\n        data-input-position=\"bottom\"\n        data-theme=\"catppuccin_macchiato\"\n        data-lang=\"zh-CN\"\n        crossorigin=\"anonymous\"\n        async>\n</script>",
-      "repo": "MareDevi/Mavi",
-      "repoId": "R_kgDOQofjrA",
-      "category": "General",
-      "categoryId": "DIC_kwDOQofjrM4Czxpo",
-      "mapping": "pathname",
-      "strict": "0",
-      "reactions": "1",
-      "metadata": "0",
-      "inputPosition": "bottom",
-      "theme": "catppuccin_macchiato",
-      "lang": "zh-CN",
+      "rawScript": "",
+      "repo": "",
+      "repoId": "",
+      "category": "",
+      "categoryId": "",
+      "mapping": "",
+      "strict": "",
+      "reactions": "",
+      "metadata": "",
+      "inputPosition": "",
+      "theme": "",
+      "lang": "",
       "loading": ""
     }
   },
   "features": {
     "commandPalette": true,
-    "tableOfContents": true,
     "readingTime": true,
     "linkedMentions": true,
     "linkedMentionsCompact": false,
@@ -177,7 +172,7 @@
     "scrollToTop": true,
     "showSocialIconsInFooter": true,
     "profilePicture": false,
-    "comments": true,
+    "comments": false,
     "featureButton": "mode",
     "showPostCardCoverImages": "featured-and-posts",
     "postCardAspectRatio": "og",
@@ -192,7 +187,7 @@
   "typography": {
     "headingFont": "Inter",
     "proseFont": "Inter",
-    "monoFont": "Fira Code",
+    "monoFont": "JetBrains Mono",
     "fontSource": "local",
     "fontDisplay": "swap",
     "customFonts": {
@@ -213,25 +208,25 @@
       "style": "circle"
     },
     "comments": {
-      "enabled": true,
+      "enabled": false,
       "provider": "giscus",
-      "rawScript": "<script src=\"https://giscus.app/client.js\"\n        data-repo=\"MareDevi/Mavi\"\n        data-repo-id=\"R_kgDOQofjrA\"\n        data-category=\"General\"\n        data-category-id=\"DIC_kwDOQofjrM4Czxpo\"\n        data-mapping=\"pathname\"\n        data-strict=\"0\"\n        data-reactions-enabled=\"1\"\n        data-emit-metadata=\"0\"\n        data-input-position=\"bottom\"\n        data-theme=\"catppuccin_macchiato\"\n        data-lang=\"zh-CN\"\n        crossorigin=\"anonymous\"\n        async>\n</script>",
-      "repo": "MareDevi/Mavi",
-      "repoId": "R_kgDOQofjrA",
-      "category": "General",
-      "categoryId": "DIC_kwDOQofjrM4Czxpo",
-      "mapping": "pathname",
-      "strict": "0",
-      "reactions": "1",
-      "metadata": "0",
-      "inputPosition": "bottom",
-      "theme": "catppuccin_macchiato",
-      "lang": "zh-CN",
+      "rawScript": "",
+      "repo": "",
+      "repoId": "",
+      "category": "",
+      "categoryId": "",
+      "mapping": "",
+      "strict": "",
+      "reactions": "",
+      "metadata": "",
+      "inputPosition": "",
+      "theme": "",
+      "lang": "",
       "loading": ""
     }
   },
   "deployment": {
-    "platform": "cloudflare-workers"
+    "platform": "netlify"
   },
   "pluginConfig": {
     "obsidianSettings": {

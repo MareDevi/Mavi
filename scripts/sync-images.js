@@ -35,11 +35,6 @@ const IMAGE_SYNC_CONFIGS = [
     name: 'docs'
   },
   {
-    source: 'src/content/snippets/attachments',
-    target: 'public/snippets/attachments',
-    name: 'snippets'
-  },
-  {
     source: 'src/content/special/attachments',
     target: 'public/special/attachments',
     name: 'special'
@@ -372,7 +367,7 @@ async function syncAllImages() {
   }
 
   // Sync folder-based images for all content types
-  const contentTypes = ['posts', 'pages', 'projects', 'docs', 'snippets', 'special'];
+  const contentTypes = ['posts', 'pages', 'projects', 'docs', 'special'];
   for (const contentType of contentTypes) {
     await syncFolderBasedImages(contentType);
   }
