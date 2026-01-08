@@ -34,6 +34,13 @@
       "title": "Rust 中的 Pin",
       "slug": "rust-pin",
       "connections": 2
+    },
+    {
+      "id": "rust",
+      "type": "post",
+      "title": "Rust中的迭代器",
+      "slug": "rust",
+      "connections": 0
     }
   ],
   "connections": [
@@ -49,9 +56,9 @@
     }
   ],
   "metadata": {
-    "totalPosts": 5,
+    "totalPosts": 6,
     "totalConnections": 2,
     "maxNodesApplied": false,
-    "originalNodeCount": 5
+    "originalNodeCount": 6
   }
 }

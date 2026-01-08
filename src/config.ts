@@ -322,7 +322,7 @@ export const siteConfig: SiteConfig = {
       { title: "Posts", url: "/posts/" },
       { title: "Snippets", url: "/snippets/" },
       { title: "Projects", url: "/projects/" },
-      { title: "Docs", url: "/docs/" },
+      // { title: "Docs", url: "/docs/" },
       { title: "Friends", url: "/friends/" },
       { title: "About", url: "/about/",
         children: [
@@ -350,7 +350,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:OPTIONAL_CONTENT_TYPES_PROJECTS]
     projects: true, // Enable projects section
     // [CONFIG:OPTIONAL_CONTENT_TYPES_DOCS]
-    docs: true, // Enable documentation section
+    docs: false, // Enable documentation section
     // [CONFIG:OPTIONAL_CONTENT_TYPES_SNIPPETS]
     snippets: true, // Enable snippets section
   },
